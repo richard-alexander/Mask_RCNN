@@ -48,6 +48,10 @@ class Config(object):
     # down the training.
     VALIDATION_STEPS = 50
 
+    # Backbone network architecture
+    # Supported values are: resnet50, resnet101
+    BACKBONE = "resnet101"
+
     # The strides of each layer of the FPN Pyramid. These values
     # are based on a Resnet101 backbone.
     BACKBONE_STRIDES = [4, 8, 16, 32, 64]
@@ -83,7 +87,7 @@ class Config(object):
     USE_MINI_MASK = True
     MINI_MASK_SHAPE = (56, 56)  # (height, width) of the mini-mask
 
-    # Input image resing
+    # Input image resizing
     # Images are resized such that the smallest side is >= IMAGE_MIN_DIM and
     # the longest side is <= IMAGE_MAX_DIM. In case both conditions can't
     # be satisfied together the IMAGE_MAX_DIM is enforced.
@@ -143,6 +147,9 @@ class Config(object):
     # the RPN. For example, to debug the classifier head without having to
     # train the RPN.
     USE_RPN_ROIS = True
+
+    # Gradient norm clipping
+    GRADIENT_CLIP_NORM = 5.0
 
     def __init__(self):
         """Set values of computed attributes."""

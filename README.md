@@ -17,6 +17,13 @@ The repository includes:
 The code is documented and designed to be easy to extend. If you use it in your research, please consider referencing this repository. If you work on 3D vision, you might find our recently released [Matterport3D](https://matterport.com/blog/2017/09/20/announcing-matterport3d-research-dataset/) dataset useful as well.
 This dataset was created from 3D-reconstructed spaces captured by our customers who agreed to make them publicly available for academic use. You can see more examples [here](https://matterport.com/gallery/).
 
+# Projects Using this Model
+If you extend this model to other datasets or build projects that use it, we'd love to hear from you.
+
+* [Images to OSM](https://github.com/jremillard/images-to-osm): Use TensorFlow, Bing, and OSM to find features in satellite images.
+The goal is to improve OpenStreetMap by adding high quality baseball, soccer, tennis, football, and basketball fields.
+* [4K Video Demo](https://www.youtube.com/watch?v=OOT3UIXZztE): A beautiful demo on 4K video, by Karol Majek.
+    [![Mask RCNN on 4K Video](assets/4k_video.gif)](https://www.youtube.com/watch?v=OOT3UIXZztE)
 
 # Getting Started
 * [demo.ipynb](/demo.ipynb) Is the easiest way to start. It shows an example of using a model pre-trained on MS COCO to segment objects in your own images.
@@ -128,7 +135,7 @@ See the base `Dataset` class in utils.py and examples of extending it in train_s
 This implementation follows the Mask RCNN paper for the most part, but there are a few cases where we deviated in favor of code simplicity and generalization. These are some of the differences we're aware of. If you encounter other differences, please do let us know.
 
 * **Image Resizing:** To support training multiple images per batch we resize all images to the same size. For example, 1024x1024px on MS COCO. We preserve the aspect ratio, so if an image is not square we pad it with zeros. In the paper the resizing is done such that the smallest side is 800px and the largest is trimmed at 1000px.
-* **Bounding Boxes**: Some datasets provide bounding boxes and some provide masks only. To support training on multiple datasets we opted to ignore the bounding boxes that come with the dataset and generate them on the fly instead. We pick the smallest box that encapsulates all the pixels of the mask as the bounding box. This simplifies the implementation and also makes it easy to apply certain image augmentations that would otherwise be really hard to apply to bounding boxes, such as image rotation.
+* **Bounding Boxes**: Some datasets provide bounding boxes and some provide masks only. To support training on multiple datasets we opted to ignore the bounding boxes that come with the dataset and generate them on the fly instead. We pick the smallest box that encapsulates all the pixels of the mask as the bounding box. This simplifies the implementation and also makes it easy to apply image augmentations that would otherwise be harder to apply to bounding boxes, such as image rotation.
 
     To validate this approach, we compared our computed bounding boxes to those provided by the COCO dataset.
 We found that ~2% of bounding boxes differed by 1px or more, ~0.05% differed by 5px or more, 
@@ -157,7 +164,7 @@ You can also [join our team](https://matterport.com/careers/) and help us build 
 * TensorFlow 1.3+
 * Keras 2.0.8+
 * Jupyter Notebook
-* Numpy, skimage, scipy, Pillow
+* Numpy, skimage, scipy, Pillow, cython, h5py
 
 ### MS COCO Requirements:
 To train or test on MS COCO, you'll also need:
