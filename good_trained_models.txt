@@ -1,0 +1,5 @@
+First good attempt with cropping
+Checkpoint Path: /home/rla/deeplearn/Mask_RCNN/logs/cells20180403T1052/mask_rcnn_cells_{epoch:04d}.h5
+
+First good attempt with full image (but no ROI)
+Checkpoint Path: /home/rla/deeplearn/Mask_RCNN/logs/cells20180403T1130/mask_rcnn_cells_{epoch:04d}.h5

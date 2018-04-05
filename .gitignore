@@ -1,6 +1,9 @@
 .ipynb_checkpoints/
 __pycache__/
 mask_rcnn_coco.h5
+mask_rcnn_coco_weights.h5
 .idea/
 
 rla/
+secret/
+logs/
