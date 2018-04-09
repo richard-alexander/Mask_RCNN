@@ -95,19 +95,21 @@ def getROIobjects(zip_path, class_id, height=None, width=None):  # image_path=No
     rois = list(roi_dict.items())
     masks = []
     class_ids = []
-    for n, roi in enumerate(rois):
-        #get x y arrays
-        x = roi[1]['x']
-        y = roi[1]['y']
-        #create array of points for polygon path
-        points = np.vstack((x, y)).T
-        points = points.reshape((-1,1,2))
-        mask = cv2.fillPoly(img.copy(),[points],True,1)
-        masks.append(mask)
-        class_ids.append(class_id)
-    # convert lists to ndarrays
-    masks = np.asarray(masks) 
-    masks = np.rollaxis(masks,0,3)  # roll axis to return correct shape
-    class_ids = np.asanyarray(class_ids)
-    
+    if len(rois) > 0:
+        # Only continue if we have some ROIs
+        for n, roi in enumerate(rois):
+            #get x y arrays
+            x = roi[1]['x']
+            y = roi[1]['y']
+            #create array of points for polygon path
+            points = np.vstack((x, y)).T
+            points = points.reshape((-1,1,2))
+            mask = cv2.fillPoly(img.copy(),[points],True,1)
+            masks.append(mask)
+            class_ids.append(class_id)
+        # convert lists to ndarrays
+        masks = np.asarray(masks) 
+        masks = np.rollaxis(masks,0,3)  # roll axis to return correct shape
+        class_ids = np.asanyarray(class_ids)
+        
     return masks, class_ids
