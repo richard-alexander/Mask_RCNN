@@ -35,16 +35,12 @@ import numpy as np
 import skimage.draw
 
 # Root directory of the project
-ROOT_DIR = os.getcwd()
-if ROOT_DIR.endswith("samples/balloon"):
-    # Go up two levels to the repo root
-    ROOT_DIR = os.path.dirname(os.path.dirname(ROOT_DIR))
+ROOT_DIR = os.path.abspath("../../")
 
 # Import Mask RCNN
-sys.path.append(ROOT_DIR)
-from config import Config
-import utils
-import model as modellib
+sys.path.append(ROOT_DIR)  # To find local version of the library
+from mrcnn.config import Config
+from mrcnn import model as modellib, utils
 
 # Path to trained weights file
 COCO_WEIGHTS_PATH = os.path.join(ROOT_DIR, "mask_rcnn_coco.h5")
@@ -70,7 +66,7 @@ class BalloonConfig(Config):
     IMAGES_PER_GPU = 2
 
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 1  # Background + baloon
+    NUM_CLASSES = 1 + 1  # Background + balloon
 
     # Number of training steps per epoch
     STEPS_PER_EPOCH = 100
@@ -164,7 +160,7 @@ class BalloonDataset(utils.Dataset):
 
         # Return mask, and array of class IDs of each instance. Since we have
         # one class ID only, we return an array of 1s
-        return mask, np.ones([mask.shape[-1]], dtype=np.int32)
+        return mask.astype(np.bool), np.ones([mask.shape[-1]], dtype=np.int32)
 
     def image_reference(self, image_id):
         """Return the path of the image."""
@@ -208,13 +204,13 @@ def color_splash(image, mask):
     # Make a grayscale copy of the image. The grayscale copy still
     # has 3 RGB channels, though.
     gray = skimage.color.gray2rgb(skimage.color.rgb2gray(image)) * 255
-    # We're treating all instances as one, so collapse the mask into one layer
-    mask = (np.sum(mask, -1, keepdims=True) >= 1)
     # Copy color pixels from the original color image where mask is set
-    if mask.shape[0] > 0:
+    if mask.shape[-1] > 0:
+        # We're treating all instances as one, so collapse the mask into one layer
+        mask = (np.sum(mask, -1, keepdims=True) >= 1)
         splash = np.where(mask, image, gray).astype(np.uint8)
     else:
-        splash = gray
+        splash = gray.astype(np.uint8)
     return splash
 
 
@@ -340,7 +336,7 @@ if __name__ == '__main__':
             utils.download_trained_weights(weights_path)
     elif args.weights.lower() == "last":
         # Find last trained weights
-        weights_path = model.find_last()[1]
+        weights_path = model.find_last()
     elif args.weights.lower() == "imagenet":
         # Start from ImageNet trained weights
         weights_path = model.get_imagenet_weights()
